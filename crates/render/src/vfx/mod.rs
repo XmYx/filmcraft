@@ -103,6 +103,7 @@ impl FxEnv for ItemEnv<'_> {
             clip_name: &self.item.name,
             project: Some(self.project),
             env: None,
+            frame_rate: self.seq.settings.frame_rate.as_f64(),
             working: self.seq.settings.color.working,
         };
         for e in &self.item.effects {
@@ -484,6 +485,7 @@ pub fn apply(img: &mut Image, e: &EffectInstance, cx: &FxCtx) -> bool {
         "spin" => distort::spin(img, e, cx),
         "wiggle" => distort::wiggle(img, e, cx),
         "camera_shake" => distort::camera_shake(img, e, cx),
+        "transform" if bv(e, "shutter_override") && fv(e, "shutter_angle", cx) > 0.5 => distort::transform_fx(img, e, cx),
         "spacer" => distort::spacer(img, e, cx),
         "clone" => distort::clone_fx(img, e, cx),
         "auto_align" => distort::auto_align(img, e, cx),
